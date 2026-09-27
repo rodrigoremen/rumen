@@ -105,6 +105,11 @@ body {
   overflow: hidden;
   isolation: isolate;
 }
+/* El barrido dorado necesita ancestro posicionado, pero jamás debe
+   romper un posicionamiento fixed (botón flotante de pedido). */
+.btn-gold.fixed {
+  position: fixed;
+}
 .btn-gold::before {
   content: "";
   position: absolute;
@@ -134,8 +139,57 @@ body {
 .sheet {
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
+.sheet-dragging {
+  transition: none !important;
+}
 .backdrop {
   transition: opacity 0.35s ease;
+}
+
+/* Bloqueo de scroll del fondo cuando hay capa abierta */
+html.locked,
+html.locked body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+#sheet,
+#cart-drawer {
+  overscroll-behavior: contain;
+}
+#sheet-grab {
+  touch-action: none;
+  cursor: grab;
+}
+#sheet-grab:active {
+  cursor: grabbing;
+}
+
+/* Isotipo circular con zoom: recorta el aire negro y centra los cuernos */
+.logo-mark {
+  overflow: hidden;
+  border-radius: 9999px;
+  background: #0d0d0d;
+}
+.logo-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 44%;
+  transform: scale(1.65);
+}
+/* Entrada del botón de pedido */
+@keyframes fab-pop {
+  from {
+    transform: translateY(14px) scale(0.97);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+.fab-show {
+  animation: fab-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Numerals align in prices */
