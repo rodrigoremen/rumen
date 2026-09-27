@@ -1,0 +1,940 @@
+---
+import "../styles/global.css";
+
+const WA_NUMBER = "525565366128";
+const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent("Hola RUMEN, quiero hacer un pedido")}`;
+const MENU_APP = "https://menurumen.netlify.app/";
+
+type Price = { k: string; v: number };
+type Item = {
+  id: string;
+  num: number;
+  name: string;
+  tech?: string;
+  desc?: string;
+  prices: Price[];
+  badges?: { label: string; kind: "bufalo" | "insignia" | "limit" }[];
+  img?: string;
+  imgAlt?: string;
+  termino?: boolean;
+  featured?: boolean;
+};
+
+type Cat = { id: string; name: string; sub: string; items: Item[] };
+
+const MENU: Cat[] = [
+  {
+    id: "smash",
+    name: "Hamburguesas Smash",
+    sub: "Carne prensada y sellada en plancha a fuego alto · doble smash, 125 g de proteína",
+    items: [
+      {
+        id: "clasica-res", num: 1, name: "Clásica Smash de Res", tech: "Técnica smash",
+        desc: "Doble smash, pan, queso americano fundido, pepinillos, salsa Rumen de la casa.",
+        prices: [{ k: "Sola", v: 99 }, { k: "Combo", v: 149 }],
+        img: "/img/clasica.jpg", imgAlt: "Clásica Smash con queso americano fundido y chile toreado",
+      },
+      {
+        id: "clasica-bufalo", num: 2, name: "Clásica Smash de Búfalo", tech: "Técnica smash",
+        desc: "Doble smash, pan, queso americano fundido, pepinillos, salsa Rumen de la casa. Búfalo de rancho.",
+        prices: [{ k: "Sola", v: 179 }, { k: "Combo", v: 229 }],
+        badges: [{ label: "Búfalo", kind: "bufalo" }, { label: "Hasta agotar existencia", kind: "limit" }],
+        img: "/img/clasica.jpg", imgAlt: "Clásica Smash de búfalo con queso fundido",
+      },
+      {
+        id: "rancho-res", num: 3, name: "La del Rancho de Res", tech: "Técnica smash",
+        desc: "Doble smash, pan, doble salsa Rumen, tocino tostado, queso americano, cebolla morada, cebolla caramelizada, pepinillos, lechuga.",
+        prices: [{ k: "Sola", v: 159 }, { k: "Combo", v: 209 }],
+        img: "/img/rancho.jpg", imgAlt: "La del Rancho con tocino, cebolla morada y doble salsa Rumen",
+      },
+      {
+        id: "rancho-bufalo", num: 4, name: "La del Rancho de Búfalo", tech: "Técnica smash",
+        desc: "Doble smash, pan, doble salsa Rumen, tocino tostado, queso americano, cebolla morada, cebolla caramelizada, pepinillos, lechuga. Búfalo de rancho.",
+        prices: [{ k: "Sola", v: 219 }, { k: "Combo", v: 269 }],
+        badges: [{ label: "Búfalo", kind: "bufalo" }, { label: "Hasta agotar existencia", kind: "limit" }],
+        img: "/img/rancho.jpg", imgAlt: "La del Rancho de búfalo con tocino y cebolla morada",
+      },
+    ],
+  },
+  {
+    id: "hamburguesas",
+    name: "Hamburguesas",
+    sub: "Una sola carne, 125 g de proteína · elige el término",
+    items: [
+      {
+        id: "rumeante-res", num: 5, name: "Rumeante Res",
+        desc: "Pan, queso manchego y americano, cebolla caramelizada, lechuga, tomate, pepinillos, salsa Rumen de la casa.",
+        prices: [{ k: "Sola", v: 145 }, { k: "Combo", v: 195 }],
+        termino: true,
+      },
+      {
+        id: "rumeante-bufalo", num: 6, name: "Rumeante Búfalo",
+        desc: "Pan, queso manchego y americano, cebolla caramelizada, lechuga, tomate, pepinillos, salsa Rumen de la casa. Búfalo de rancho.",
+        prices: [{ k: "Sola", v: 199 }, { k: "Combo", v: 249 }],
+        badges: [
+          { label: "Insignia de la casa", kind: "insignia" },
+          { label: "Búfalo", kind: "bufalo" },
+          { label: "Hasta agotar existencia", kind: "limit" },
+        ],
+        termino: true, featured: true,
+        img: "/img/rancho.jpg", imgAlt: "Rumeante Búfalo, insignia de la casa",
+      },
+    ],
+  },
+  {
+    id: "compartir",
+    name: "Para compartir",
+    sub: "Para acompañar o compartir",
+    items: [
+      {
+        id: "papas-rumeantes", num: 7, name: "Papas Rumeantes",
+        desc: "Papas grandes, búfalo molido, queso americano y manchego fundidos, salsa Rumen, tocino.",
+        prices: [{ k: "Solas", v: 189 }, { k: "Con refresco", v: 209 }],
+        badges: [{ label: "Hasta agotar existencia", kind: "limit" }],
+        img: "/img/papas.jpg", imgAlt: "Papas Rumeantes con búfalo molido y salsa Rumen en empaque para llevar",
+      },
+      {
+        id: "dedos", num: 8, name: "Dedos de Queso",
+        desc: "Queso Monterey Jack fundido, costra de pan empanizado.",
+        prices: [{ k: "4 pzs", v: 85 }, { k: "6 pzs", v: 125 }, { k: "8 pzs", v: 165 }],
+      },
+      {
+        id: "papas", num: 9, name: "Papas a la Francesa",
+        desc: "Corte delgado.",
+        prices: [{ k: "Chica 80 g", v: 39 }, { k: "Mediana 120 g", v: 49 }, { k: "Grande 150 g", v: 59 }],
+      },
+    ],
+  },
+  {
+    id: "bebidas",
+    name: "Bebidas",
+    sub: "Bien fríos",
+    items: [
+      {
+        id: "coca", num: 10, name: "Coca-Cola 235 ml (vidrio)",
+        prices: [{ k: "Pieza", v: 35 }],
+      },
+      {
+        id: "lata", num: 11, name: "Refresco de lata 355 ml",
+        desc: "Pepsi, Mirinda, 7Up o Manzanita.",
+        prices: [{ k: "Pieza", v: 35 }],
+      },
+    ],
+  },
+];
+
+const badgeStyle: Record<string, string> = {
+  bufalo: "bg-gold text-coal",
+  insignia: "border border-gold text-gold",
+  limit: "border border-cream/25 text-cream-dim",
+};
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RUMEN · Búfalo de Origen — Dark Kitchen en Cuernavaca</title>
+    <meta
+      name="description"
+      content="RUMEN, Dark Kitchen de carne de búfalo premium en Cuernavaca. Smash burgers, la insignia Rumeante Búfalo y papas rumeantes. Pide por WhatsApp."
+    />
+    <link rel="icon" type="image/png" href="/img/logo-cabeza.png" />
+    <meta property="og:title" content="RUMEN · El Poder del Búfalo, Directo a tu Mesa" />
+    <meta property="og:description" content="Carne de búfalo premium, magra y deliciosa. Dark Kitchen en Cuernavaca — solo delivery y take-out." />
+    <meta property="og:image" content="/img/rancho.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Montserrat:ital,wght@0,300..800;1,300..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-coal text-cream font-body antialiased">
+    <!-- ══════════ HEADER ══════════ -->
+    <header class="fixed inset-x-0 top-0 z-40 border-b border-gold/15 bg-coal/85 backdrop-blur-md">
+      <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+        <a href="#top" class="flex items-center gap-3">
+          <img src="/img/logo-cabeza.png" alt="Isotipo RUMEN — cabeza de búfalo dorada" class="h-10 w-10 rounded-full object-cover ring-1 ring-gold/40" />
+          <span class="leading-none">
+            <span class="block font-display text-2xl font-black tracking-[0.08em]">RUMEN</span>
+            <span class="block text-[10px] font-semibold uppercase tracking-[0.32em] text-gold">Búfalo de origen</span>
+          </span>
+        </a>
+        <nav class="hidden items-center gap-7 text-[13px] font-medium uppercase tracking-[0.14em] text-cream-dim lg:flex" aria-label="Navegación principal">
+          <a href="#bufalo" class="transition hover:text-gold">Por qué búfalo</a>
+          <a href="#menu" class="transition hover:text-gold">Menú</a>
+          <a href="#cobertura" class="transition hover:text-gold">Cobertura</a>
+          <a href="#instagram" class="transition hover:text-gold">Instagram</a>
+        </nav>
+        <div class="flex items-center gap-2">
+          <a
+            href={MENU_APP}
+            target="_blank"
+            rel="noopener"
+            class="hidden rounded-full px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-cream-dim transition hover:text-gold sm:block"
+          >
+            Menú interactivo ↗
+          </a>
+          <a
+            href={WA_LINK}
+            target="_blank"
+            rel="noopener"
+            class="btn-gold whitespace-nowrap rounded-full border border-gold px-3 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-gold transition-all hover:bg-gold hover:text-coal hover:shadow-[0_0_28px_rgba(193,140,78,0.45)] sm:px-5 sm:py-2 sm:text-[12px] sm:tracking-[0.12em]"
+          >
+            Pide por WhatsApp
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- ══════════ HERO ══════════ -->
+      <section class="grain ember relative flex min-h-[100svh] items-end overflow-hidden">
+        <img
+          src="/img/rancho.jpg"
+          alt="Hamburguesa La del Rancho de búfalo con tocino, cebolla morada y salsa Rumen"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-coal via-coal/55 to-coal/25"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-coal/80 via-transparent to-transparent"></div>
+
+        <div class="relative mx-auto w-full max-w-7xl px-4 pb-16 pt-36 sm:px-6 sm:pb-24">
+          <p class="reveal mb-5 inline-flex items-center gap-2 rounded-full border border-gold/40 bg-coal/60 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.24em] text-gold backdrop-blur">
+            <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-gold"></span>
+            Dark Kitchen · Cuernavaca
+          </p>
+          <h1 class="reveal max-w-4xl font-display text-[13vw] font-black leading-[0.95] tracking-tight text-cream sm:text-7xl lg:text-8xl">
+            El Poder del Búfalo,<br />
+            <em class="font-light italic text-gold-soft">Directo a tu Mesa.</em>
+          </h1>
+          <p class="reveal mt-6 max-w-xl text-base leading-relaxed text-cream-dim sm:text-lg">
+            La carne premium, magra y deliciosa, cocinada en nuestra Dark Kitchen
+            para una experiencia única en casa.
+          </p>
+          <div class="reveal mt-9 flex flex-wrap items-center gap-3">
+            <a
+              href="#menu"
+              class="btn-gold rounded-full bg-gold px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] text-coal transition-all hover:bg-gold-soft hover:shadow-[0_0_40px_rgba(193,140,78,0.55)]"
+            >
+              Ver Menú Completo
+            </a>
+            <a
+              href={WA_LINK}
+              target="_blank"
+              rel="noopener"
+              class="rounded-full border border-cream/30 px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] text-cream transition hover:border-gold hover:text-gold"
+            >
+              Pide por WhatsApp
+            </a>
+          </div>
+          <dl class="reveal mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-cream/10 pt-6 text-[12px] uppercase tracking-[0.18em] text-smoke">
+            <div class="flex items-center gap-2"><dt class="text-gold">◆</dt><dd>Búfalo de rancho</dd></div>
+            <div class="flex items-center gap-2"><dt class="text-gold">◆</dt><dd>Smash a fuego alto</dd></div>
+            <div class="flex items-center gap-2"><dt class="text-gold">◆</dt><dd>Solo delivery y take-out</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ══════════ MARQUESINA ══════════ -->
+      <div class="overflow-hidden border-y border-gold/25 bg-gold py-3" aria-hidden="true">
+        <div class="marquee-track flex w-max items-center gap-8 whitespace-nowrap text-[13px] font-extrabold uppercase tracking-[0.3em] text-coal">
+          {Array.from({ length: 2 }).map(() => (
+            <span class="flex items-center gap-8">
+              <span>Búfalo de origen</span><span>✦</span><span>Doble smash</span><span>✦</span>
+              <span>Rumeante insignia</span><span>✦</span><span>Salsa Rumen de la casa</span><span>✦</span>
+              <span>Cuernavaca · Jiutepec · Temixco</span><span>✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- ══════════ POR QUÉ BÚFALO ══════════ -->
+      <section id="bufalo" class="relative mx-auto max-w-7xl scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
+        <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+          <div class="reveal">
+            <p class="text-[11px] font-bold uppercase tracking-[0.3em] text-gold">Storytelling</p>
+            <h2 class="mt-3 font-display text-4xl font-black leading-tight sm:text-5xl">
+              ¿Por qué<br />Búfalo?
+            </h2>
+            <div class="mt-5 h-px w-24 bg-gold"></div>
+            <p class="mt-5 max-w-md leading-relaxed text-cream-dim">
+              No es res. Es una carne más magra, con carácter propio y un sabor
+              profundo que la plancha smash convierte en costra caramelizada.
+              La pruebas una vez y la res te sabe a trámite.
+            </p>
+            <img
+              src="/img/logo-completo.png"
+              alt="Logo RUMEN — Búfalo de origen"
+              class="mt-8 w-52 rounded-xl border border-gold/20 object-cover opacity-90"
+              loading="lazy"
+            />
+          </div>
+          <div class="grid gap-4 sm:grid-cols-3">
+            <div class="reveal rounded-2xl border border-cream/10 bg-coal-2 p-7 transition hover:border-gold/50">
+              <svg viewBox="0 0 24 24" class="h-10 w-10 text-gold" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2c1 4-2 5-2 8a4 4 0 0 0 8 0c0-1-.5-2-1-2.5C17 9 18 10 18 12a6 6 0 0 1-12 0c0-4 4-6 6-10z" />
+                <path d="M9 22h6" />
+              </svg>
+              <h3 class="mt-5 font-display text-2xl font-bold">Más Proteína</h3>
+              <p class="mt-2 text-sm leading-relaxed text-cream-dim">125 g de proteína por burger para rendir el día y la noche.</p>
+            </div>
+            <div class="reveal rounded-2xl border border-cream/10 bg-coal-2 p-7 transition hover:border-gold/50" style="transition-delay:60ms">
+              <svg viewBox="0 0 24 24" class="h-10 w-10 text-gold" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z" />
+                <path d="M9 14a3 3 0 0 0 3 3" />
+              </svg>
+              <h3 class="mt-5 font-display text-2xl font-bold">Menos Grasa</h3>
+              <p class="mt-2 text-sm leading-relaxed text-cream-dim">Carne magra de rancho: todo el sabor, nada pesado.</p>
+            </div>
+            <div class="reveal rounded-2xl border border-cream/10 bg-coal-2 p-7 transition hover:border-gold/50" style="transition-delay:120ms">
+              <svg viewBox="0 0 24 24" class="h-10 w-10 text-gold" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12V3a1 1 0 0 1 2 0v9a2.5 2.5 0 0 0 2.5 2.5c.8 0 1.5-.4 2-1V11a1 1 0 0 1 2 0v3.5c0 3-2.5 5.5-5.7 5.9l-3.6.4c-2.9.3-5.7-1.4-6.5-4.2l-1-3.3a1.6 1.6 0 0 1 2.6-1.5l1.2 1.7z" />
+              </svg>
+              <h3 class="mt-5 font-display text-2xl font-bold">Sabor Intenso</h3>
+              <p class="mt-2 text-sm leading-relaxed text-cream-dim">Notas profundas y sellado smash que ninguna res clásica alcanza.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ MENÚ ══════════ -->
+      <section id="menu" class="scroll-mt-20 border-t border-cream/10 bg-coal-2/60">
+        <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
+          <div class="reveal flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-[0.3em] text-gold">El core</p>
+              <h2 class="mt-3 font-display text-4xl font-black sm:text-5xl">Menú RUMEN</h2>
+              <p class="mt-3 max-w-lg text-cream-dim">Elige, personaliza y manda tu pedido por WhatsApp. Precios en MXN.</p>
+            </div>
+            <a
+              href={MENU_APP}
+              target="_blank"
+              rel="noopener"
+              class="rounded-full border border-gold/60 px-6 py-3 text-[12px] font-bold uppercase tracking-[0.14em] text-gold transition hover:bg-gold hover:text-coal"
+            >
+              Abrir menú interactivo ↗
+            </a>
+          </div>
+
+          <!-- Tabs -->
+          <div class="reveal mt-10 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Categorías del menú" id="tabs">
+            {MENU.map((c, i) => (
+              <button
+                role="tab"
+                aria-selected={i === 0 ? "true" : "false"}
+                data-cat={c.id}
+                class:list={[
+                  "shrink-0 rounded-full border px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] transition",
+                  i === 0
+                    ? "border-gold bg-gold text-coal"
+                    : "border-cream/20 text-cream-dim hover:border-gold/60 hover:text-gold",
+                ]}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+
+          <!-- Categorías -->
+          {MENU.map((cat, ci) => (
+            <div class="menu-cat mt-8" data-cat-panel={cat.id} hidden={ci !== 0}>
+              <p class="text-sm text-smoke">{cat.sub}</p>
+              <div class="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {cat.items.map((item) => (
+                  <article
+                    class:list={[
+                      "group relative flex flex-col overflow-hidden rounded-2xl border bg-coal transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_60px_-20px_rgba(193,140,78,0.35)]",
+                      item.featured ? "border-gold/60" : "border-cream/10 hover:border-gold/40",
+                    ]}
+                  >
+                    {item.img ? (
+                      <div class="grain relative h-52 overflow-hidden">
+                        <img src={item.img} alt={item.imgAlt ?? item.name} loading="lazy" class="dish-photo h-full w-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-coal via-transparent to-transparent"></div>
+                        <span class="absolute left-4 top-4 rounded-full bg-coal/80 px-3 py-1 font-display text-sm font-bold text-cream backdrop-blur">
+                          N° {item.num}
+                        </span>
+                      </div>
+                    ) : (
+                      <div class="relative flex h-28 items-center justify-between overflow-hidden bg-coal-3 px-5">
+                        <span class="font-display text-4xl font-black text-cream/15">N° {item.num}</span>
+                        <img src="/img/logo-cabeza.png" alt="" aria-hidden="true" class="h-16 w-16 rounded-full object-cover opacity-70 ring-1 ring-gold/30" loading="lazy" />
+                      </div>
+                    )}
+                    <div class="flex flex-1 flex-col p-5 sm:p-6">
+                      {item.badges && (
+                        <div class="mb-3 flex flex-wrap gap-1.5">
+                          {item.badges.map((b) => (
+                            <span class:list={["rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em]", badgeStyle[b.kind]]}>
+                              {b.label}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <h3 class="font-display text-2xl font-bold leading-tight">
+                        {item.name}
+                      </h3>
+                      {item.tech && <p class="mt-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-smoke">{item.tech}</p>}
+                      {item.desc && <p class="mt-2 flex-1 text-[13px] leading-relaxed text-cream-dim">{item.desc}</p>}
+                      <div class="tnum mt-4 flex flex-wrap gap-x-5 gap-y-1">
+                        {item.prices.map((p) => (
+                          <p class="text-sm text-cream-dim">
+                            {p.k} <span class="font-body text-lg font-extrabold tracking-tight text-gold">${p.v}</span>
+                          </p>
+                        ))}
+                      </div>
+                      <button
+                        data-order={JSON.stringify(item)}
+                        class="order-btn btn-gold mt-5 w-full rounded-full border border-gold py-3 text-[12px] font-bold uppercase tracking-[0.16em] text-gold transition-all hover:bg-gold hover:text-coal hover:shadow-[0_0_28px_rgba(193,140,78,0.45)]"
+                      >
+                        {item.prices.length > 1 ? "Elegir" : "Agregar"} ＋
+                      </button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
+          <p class="mt-8 text-center text-[12px] uppercase tracking-[0.2em] text-smoke">Búfalo de rancho · Res seleccionada</p>
+        </div>
+      </section>
+
+      <!-- ══════════ COBERTURA ══════════ -->
+      <section id="cobertura" class="scroll-mt-20 border-t border-cream/10">
+        <div class="mx-auto grid max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-2 lg:gap-16">
+          <div class="reveal">
+            <p class="text-[11px] font-bold uppercase tracking-[0.3em] text-gold">Dark Kitchen · UX</p>
+            <h2 class="mt-3 font-display text-4xl font-black sm:text-5xl">Verifica si llegamos a tu zona</h2>
+            <p class="mt-4 max-w-md leading-relaxed text-cream-dim">
+              Repartimos en Cuernavaca y alrededores. Escribe tu código postal
+              y te decimos al instante.
+            </p>
+            <form id="cp-form" class="mt-7 flex max-w-md gap-2" autocomplete="off">
+              <label for="cp-input" class="sr-only">Código postal</label>
+              <input
+                id="cp-input"
+                inputmode="numeric"
+                maxlength="5"
+                placeholder="Ej. 62000"
+                class="w-full rounded-full border border-cream/20 bg-coal-2 px-5 py-3.5 text-sm tracking-[0.2em] text-cream placeholder:text-smoke focus:border-gold focus:outline-none"
+              />
+              <button
+                type="submit"
+                class="btn-gold shrink-0 rounded-full bg-gold px-6 py-3.5 text-[12px] font-bold uppercase tracking-[0.14em] text-coal transition hover:bg-gold-soft"
+              >
+                Verificar
+              </button>
+            </form>
+            <p id="cp-result" role="status" class="mt-4 hidden max-w-md rounded-xl border px-4 py-3 text-sm leading-relaxed"></p>
+            <div class="mt-6 flex flex-wrap gap-2">
+              {["Cuernavaca centro", "Jiutepec", "Temixco", "Emiliano Zapata", "Alrededores"].map((z) => (
+                <span class="rounded-full border border-cream/15 px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-cream-dim">{z}</span>
+              ))}
+            </div>
+          </div>
+          <div class="reveal relative overflow-hidden rounded-2xl border border-gold/25 bg-coal-2 p-8 sm:p-10">
+            <div class="ember absolute inset-0" aria-hidden="true"></div>
+            <div class="relative">
+              <img src="/img/logo-cabeza.png" alt="" aria-hidden="true" class="h-14 w-14 rounded-full object-cover ring-1 ring-gold/40" />
+              <h3 class="mt-5 font-display text-3xl font-bold">Así funciona el pedido</h3>
+              <ol class="mt-6 space-y-5">
+                {[
+                  ["01", "Arma tu pedido", "Elige platillos, presentación y extras en el menú."],
+                  ["02", "Envíalo por WhatsApp", "Tu pedido llega redactado a nuestra cocina, sin llamadas."],
+                  ["03", "Recíbelo caliente", "Delivery en zona o take-out. La brasa viaja bien."],
+                ].map(([n, t, d]) => (
+                  <li class="flex gap-4">
+                    <span class="font-display text-xl font-black text-gold">{n}</span>
+                    <span>
+                      <span class="block font-bold">{t}</span>
+                      <span class="block text-sm text-cream-dim">{d}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <a
+                href={WA_LINK}
+                target="_blank"
+                rel="noopener"
+                class="btn-gold mt-8 inline-block rounded-full border border-gold px-7 py-3.5 text-[12px] font-bold uppercase tracking-[0.14em] text-gold transition hover:bg-gold hover:text-coal"
+              >
+                Preguntar horario del día
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════ INSTAGRAM ══════════ -->
+      <section id="instagram" class="scroll-mt-20 border-t border-cream/10 bg-coal-2/60">
+        <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28">
+          <div class="reveal flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-[0.3em] text-gold">Social proof</p>
+              <h2 class="mt-3 font-display text-4xl font-black sm:text-5xl"><span class="font-body font-extrabold text-gold">@</span>Rumen.mx</h2>
+              <p class="mt-3 text-cream-dim">La brasa, en tiempo real. Síguenos y etiqueta tu pedido.</p>
+            </div>
+            <a
+              href="https://www.instagram.com/rumen.mx"
+              target="_blank"
+              rel="noopener"
+              class="rounded-full border border-cream/25 px-6 py-3 text-[12px] font-bold uppercase tracking-[0.14em] transition hover:border-gold hover:text-gold"
+            >
+              Seguir en Instagram
+            </a>
+          </div>
+          <div class="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {[
+              { src: "/img/rancho.jpg", alt: "Publicación: La del Rancho con doble salsa Rumen" },
+              { src: "/img/clasica.jpg", alt: "Publicación: Clásica Smash con queso fundido" },
+              { src: "/img/papas.jpg", alt: "Publicación: Papas Rumeantes para llevar" },
+              { src: "/img/logo-completo.png", alt: "Publicación: identidad RUMEN búfalo de origen" },
+            ].map((p) => (
+              <a
+                href="https://www.instagram.com/rumen.mx"
+                target="_blank"
+                rel="noopener"
+                class="group grain relative aspect-square overflow-hidden rounded-xl border border-cream/10 transition hover:border-gold/50"
+              >
+                <img src={p.src} alt={p.alt} loading="lazy" class="dish-photo h-full w-full object-cover" />
+                <span class="absolute inset-0 flex items-center justify-center bg-coal/0 opacity-0 transition group-hover:bg-coal/45 group-hover:opacity-100">
+                  <svg viewBox="0 0 24 24" class="h-8 w-8 text-gold" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none" />
+                  </svg>
+                </span>
+              </a>
+            ))}
+          </div>
+          <p class="mt-4 text-[11px] uppercase tracking-[0.2em] text-smoke">Feed ilustrativo con fotografía real de la casa · conéctalo al API de Instagram para actualización dinámica</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer class="border-t border-gold/20 bg-black">
+      <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.3fr_1fr_1fr]">
+        <div>
+          <img src="/img/logo-completo.png" alt="RUMEN — Búfalo de origen" class="w-44 rounded-lg border border-gold/20 object-cover" loading="lazy" />
+          <p class="mt-4 max-w-xs text-sm leading-relaxed text-cream-dim">
+            Dark Kitchen especializada en carne de búfalo premium.
+            Cuernavaca, Morelos. Solo delivery y take-out.
+          </p>
+        </div>
+        <nav aria-label="Contacto">
+          <h3 class="text-[11px] font-bold uppercase tracking-[0.3em] text-gold">Contacto</h3>
+          <ul class="mt-4 space-y-3 text-sm text-cream-dim">
+            <li><a class="transition hover:text-gold" target="_blank" rel="noopener" href={WA_LINK}>WhatsApp · +52 55 6536 6128</a></li>
+            <li><a class="transition hover:text-gold" target="_blank" rel="noopener" href="https://www.instagram.com/rumen.mx">Instagram · @Rumen.mx</a></li>
+            <li><a class="transition hover:text-gold" target="_blank" rel="noopener" href={MENU_APP}>Menú interactivo ↗</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Zonas y legal">
+          <h3 class="text-[11px] font-bold uppercase tracking-[0.3em] text-gold">Zonas y legal</h3>
+          <ul class="mt-4 space-y-3 text-sm text-cream-dim">
+            <li>Cuernavaca · Jiutepec · Temixco</li>
+            <li><a class="transition hover:text-gold" href="#top">Aviso de privacidad (demo)</a></li>
+            <li><a class="transition hover:text-gold" href="#top">Términos del servicio (demo)</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="border-t border-cream/10">
+        <p class="mx-auto max-w-7xl px-4 py-5 text-[11px] uppercase tracking-[0.2em] text-smoke sm:px-6">
+          © 2026 RUMEN · Búfalo de origen · Precios en MXN · Extras de personalización demo sujetos a confirmación
+        </p>
+      </div>
+    </footer>
+
+    <!-- ══════════ BOTÓN PEDIDO + DRAWER ══════════ -->
+    <button
+      id="cart-fab"
+      class="btn-gold fixed bottom-5 left-5 z-40 hidden items-center gap-2 rounded-full bg-gold px-5 py-3.5 text-[12px] font-bold uppercase tracking-[0.14em] text-coal shadow-[0_10px_40px_rgba(193,140,78,0.5)]"
+      aria-label="Ver mi pedido"
+    >
+      Mi pedido · <span id="cart-count" class="tnum">0</span> · <span id="cart-total-fab" class="tnum">$0</span>
+    </button>
+
+    <a
+      href={WA_LINK}
+      target="_blank"
+      rel="noopener"
+      aria-label="Pedir por WhatsApp"
+      class="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gold text-coal shadow-[0_10px_40px_rgba(193,140,78,0.5)] transition hover:scale-105 hover:bg-gold-soft"
+    >
+      <svg viewBox="0 0 24 24" class="h-7 w-7" fill="currentColor" aria-hidden="true">
+        <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.1-.7l.4-.5c.1-.2.1-.4 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.2-.7.5-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.9 2.9 4.6 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3z" />
+      </svg>
+    </a>
+
+    <!-- Drawer del pedido -->
+    <div id="cart-backdrop" class="backdrop pointer-events-none fixed inset-0 z-40 bg-black/60 opacity-0 backdrop-blur-sm"></div>
+    <aside
+      id="cart-drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Mi pedido"
+      class="sheet fixed right-0 top-0 z-50 flex h-full w-full max-w-md translate-x-full flex-col border-l border-gold/25 bg-coal-2"
+    >
+      <div class="flex items-center justify-between border-b border-cream/10 px-6 py-5">
+        <h2 class="font-display text-2xl font-black">Mi pedido</h2>
+        <button id="cart-close" class="rounded-full border border-cream/20 px-3 py-1.5 text-xs uppercase tracking-widest text-cream-dim transition hover:border-gold hover:text-gold" aria-label="Cerrar pedido">✕</button>
+      </div>
+      <ul id="cart-lines" class="flex-1 space-y-4 overflow-y-auto px-6 py-6"></ul>
+      <div class="border-t border-cream/10 px-6 py-5">
+        <div class="tnum flex items-center justify-between text-lg">
+          <span class="text-cream-dim">Total</span>
+          <span id="cart-total" class="tnum font-body text-2xl font-extrabold tracking-tight text-gold">$0</span>
+        </div>
+        <button
+          id="cart-send"
+          class="btn-gold mt-4 w-full rounded-full bg-gold py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-coal transition hover:bg-gold-soft disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Enviar pedido por WhatsApp
+        </button>
+        <button id="cart-clear" class="mt-2 w-full py-2 text-[11px] uppercase tracking-[0.2em] text-smoke transition hover:text-gold">
+          Vaciar pedido
+        </button>
+      </div>
+    </aside>
+
+    <!-- ══════════ SHEET DE MODIFICADORES ══════════ -->
+    <div id="sheet-backdrop" class="backdrop pointer-events-none fixed inset-0 z-40 bg-black/70 opacity-0 backdrop-blur-sm"></div>
+    <div
+      id="sheet"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="sheet-name"
+      class="sheet fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[92svh] w-full max-w-2xl translate-y-full overflow-y-auto rounded-t-3xl border-t border-gold/30 bg-coal-2 px-6 pb-8 pt-6 sm:px-10"
+    >
+      <div class="mx-auto mb-5 h-1 w-12 rounded-full bg-cream/20" aria-hidden="true"></div>
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p id="sheet-num" class="text-[11px] font-bold uppercase tracking-[0.3em] text-gold"></p>
+          <h2 id="sheet-name" class="mt-1 font-display text-3xl font-black leading-tight"></h2>
+          <p id="sheet-desc" class="mt-2 text-sm leading-relaxed text-cream-dim"></p>
+        </div>
+        <button id="sheet-close" class="shrink-0 rounded-full border border-cream/20 px-3 py-1.5 text-xs uppercase tracking-widest text-cream-dim transition hover:border-gold hover:text-gold" aria-label="Cerrar personalización">✕</button>
+      </div>
+
+      <fieldset class="mt-6">
+        <legend class="text-[11px] font-bold uppercase tracking-[0.24em] text-gold">Presentación</legend>
+        <div id="sheet-prices" class="mt-3 grid gap-2 sm:grid-cols-3"></div>
+      </fieldset>
+
+      <fieldset id="sheet-termino-wrap" class="mt-6">
+        <legend class="text-[11px] font-bold uppercase tracking-[0.24em] text-gold">Término de la carne</legend>
+        <div id="sheet-termino" class="mt-3 grid grid-cols-2 gap-2"></div>
+        <p id="sheet-termino-note" class="mt-2 text-xs text-smoke"></p>
+      </fieldset>
+
+      <fieldset class="mt-6">
+        <legend class="text-[11px] font-bold uppercase tracking-[0.24em] text-gold">
+          Añadir extras <span class="text-smoke">· de la casa (demo)</span>
+        </legend>
+        <div id="sheet-extras" class="mt-3 grid gap-2 sm:grid-cols-2"></div>
+      </fieldset>
+
+      <div class="mt-7 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3" aria-label="Cantidad">
+          <button id="qty-minus" class="h-11 w-11 rounded-full border border-cream/25 text-xl transition hover:border-gold hover:text-gold" aria-label="Quitar uno">−</button>
+          <span id="qty-val" class="tnum w-6 text-center text-lg font-bold">1</span>
+          <button id="qty-plus" class="h-11 w-11 rounded-full border border-cream/25 text-xl transition hover:border-gold hover:text-gold" aria-label="Agregar uno">＋</button>
+        </div>
+        <button
+          id="sheet-add"
+          class="btn-gold tnum flex-1 rounded-full bg-gold py-4 text-[13px] font-bold uppercase tracking-[0.14em] text-coal transition hover:bg-gold-soft"
+        >
+          Agregar · $0
+        </button>
+      </div>
+    </div>
+
+    <script>
+      document.documentElement.classList.add("js");
+      const WA_NUMBER = "525565366128";
+
+      /* ── Reveal on scroll ── */
+      const io = new IntersectionObserver(
+        (es) => es.forEach((e) => e.isIntersecting && e.target.classList.add("is-in")),
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      /* ── Tabs de categorías ── */
+      const tabs = [...document.querySelectorAll("#tabs [role=tab]")];
+      const panels = [...document.querySelectorAll(".menu-cat")];
+      tabs.forEach((t) =>
+        t.addEventListener("click", () => {
+          tabs.forEach((x) => {
+            const on = x === t;
+            x.setAttribute("aria-selected", String(on));
+            x.className =
+              "shrink-0 rounded-full border px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] transition " +
+              (on
+                ? "border-gold bg-gold text-coal"
+                : "border-cream/20 text-cream-dim hover:border-gold/60 hover:text-gold");
+          });
+          panels.forEach((p) => (p.hidden = p.dataset.catPanel !== t.dataset.cat));
+        })
+      );
+
+      /* ── Verificador de cobertura ── */
+      const cpForm = document.getElementById("cp-form");
+      const cpInput = document.getElementById("cp-input");
+      const cpResult = document.getElementById("cp-result");
+      function zoneFor(cp) {
+        if (!/^\d{5}$/.test(cp)) return null;
+        const n = parseInt(cp, 10);
+        if (n >= 62000 && n <= 62199) return "Cuernavaca";
+        if (n >= 62200 && n <= 62399) return "Cuernavaca sur";
+        if (n >= 62400 && n <= 62579) return "Jiutepec";
+        if (n >= 62580 && n <= 62699) return "Temixco / Emiliano Zapata";
+        if (n >= 62700 && n <= 62999) return "Alrededores de Cuernavaca";
+        return null;
+      }
+      cpForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const v = cpInput.value.trim();
+        const z = zoneFor(v);
+        cpResult.classList.remove("hidden");
+        if (z) {
+          cpResult.className =
+            "mt-4 max-w-md rounded-xl border border-gold/50 bg-gold/10 px-4 py-3 text-sm leading-relaxed text-cream";
+          cpResult.innerHTML =
+            "<strong class='text-gold'>¡Llegamos a tu zona!</strong> " +
+            v + " · " + z +
+            ". Arma tu pedido y envíalo por WhatsApp.";
+        } else {
+          cpResult.className =
+            "mt-4 max-w-md rounded-xl border border-cream/20 bg-coal-3 px-4 py-3 text-sm leading-relaxed text-cream-dim";
+          cpResult.innerHTML =
+            "Ese CP está fuera de nuestra zona habitual, pero escríbenos: a veces la brasa viaja más lejos. " +
+            "<a class='text-gold underline underline-offset-4' target='_blank' rel='noopener' href='https://wa.me/" +
+            WA_NUMBER + "?text=" + encodeURIComponent("Hola RUMEN, mi CP es " + v + ", ¿llegan hasta acá?") +
+            "'>Preguntar por WhatsApp</a>";
+        }
+      });
+
+      /* ── Pedido + modificadores ── */
+      const EXTRAS = [
+        { id: "tocino", name: "Tocino tostado", price: 25 },
+        { id: "queso", name: "Queso extra", price: 20 },
+        { id: "caram", name: "Cebolla caramelizada", price: 15 },
+        { id: "salsa", name: "Salsa Rumen extra", price: 15 },
+      ];
+      const TERMINOS = ["3/4 jugoso", "Bien cocido"];
+
+      const cart = [];
+      let current = null;
+      let selPrice = 0, selTermino = "", selExtras = new Set(), qty = 1;
+
+      const sheet = document.getElementById("sheet");
+      const sheetBackdrop = document.getElementById("sheet-backdrop");
+      const cartDrawer = document.getElementById("cart-drawer");
+      const cartBackdrop = document.getElementById("cart-backdrop");
+
+      function openSheet() {
+        sheet.classList.remove("translate-y-full");
+        sheetBackdrop.classList.remove("opacity-0", "pointer-events-none");
+        document.getElementById("sheet-close").focus();
+      }
+      function closeSheet() {
+        sheet.classList.add("translate-y-full");
+        sheetBackdrop.classList.add("opacity-0", "pointer-events-none");
+      }
+      function openCart() {
+        renderCart();
+        cartDrawer.classList.remove("translate-x-full");
+        cartBackdrop.classList.remove("opacity-0", "pointer-events-none");
+      }
+      function closeCart() {
+        cartDrawer.classList.add("translate-x-full");
+        cartBackdrop.classList.add("opacity-0", "pointer-events-none");
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") { closeSheet(); closeCart(); }
+      });
+      sheetBackdrop.addEventListener("click", closeSheet);
+      cartBackdrop.addEventListener("click", closeCart);
+      document.getElementById("sheet-close").addEventListener("click", closeSheet);
+      document.getElementById("cart-close").addEventListener("click", closeCart);
+      document.getElementById("cart-fab").addEventListener("click", openCart);
+
+      function money(n) { return "$" + n; }
+
+      function refreshSheetTotal() {
+        const extrasTotal = [...selExtras].reduce((a, id) => a + EXTRAS.find((x) => x.id === id).price, 0);
+        const total = (selPrice + extrasTotal) * qty;
+        document.getElementById("qty-val").textContent = qty;
+        document.getElementById("sheet-add").textContent = "Agregar · " + money(total);
+      }
+
+      document.querySelectorAll(".order-btn").forEach((btn) =>
+        btn.addEventListener("click", () => {
+          current = JSON.parse(btn.dataset.order);
+          selPrice = current.prices[0].v;
+          selTermino = current.termino ? TERMINOS[0] : "";
+          selExtras = new Set();
+          qty = 1;
+
+          document.getElementById("sheet-num").textContent = "N° " + current.num + (current.tech ? " · " + current.tech : "");
+          document.getElementById("sheet-name").textContent = current.name;
+          document.getElementById("sheet-desc").textContent = current.desc || "";
+
+          const pw = document.getElementById("sheet-prices");
+          pw.innerHTML = "";
+          current.prices.forEach((p, i) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className =
+              "rounded-xl border px-3 py-3 text-left transition " +
+              (i === 0 ? "border-gold bg-gold/10" : "border-cream/15 hover:border-gold/50");
+            b.innerHTML =
+              "<span class='block text-[11px] uppercase tracking-[0.16em] text-cream-dim'>" + p.k + "</span>" +
+              "<span class='tnum font-body text-xl font-extrabold tracking-tight text-gold'>$" + p.v + "</span>";
+            b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+            b.addEventListener("click", () => {
+              selPrice = p.v;
+              [...pw.children].forEach((c) => {
+                c.className = "rounded-xl border px-3 py-3 text-left transition border-cream/15 hover:border-gold/50";
+                c.setAttribute("aria-pressed", "false");
+              });
+              b.className = "rounded-xl border px-3 py-3 text-left transition border-gold bg-gold/10";
+              b.setAttribute("aria-pressed", "true");
+              refreshSheetTotal();
+            });
+            pw.appendChild(b);
+          });
+
+          const tw = document.getElementById("sheet-termino-wrap");
+          if (current.termino) {
+            tw.classList.remove("hidden");
+            document.getElementById("sheet-termino-note").textContent = "";
+            const tm = document.getElementById("sheet-termino");
+            tm.innerHTML = "";
+            TERMINOS.forEach((t, i) => {
+              const b = document.createElement("button");
+              b.type = "button";
+              b.textContent = t;
+              b.className =
+                "rounded-xl border px-3 py-3 text-sm font-semibold transition " +
+                (i === 0 ? "border-gold bg-gold/10 text-cream" : "border-cream/15 text-cream-dim hover:border-gold/50");
+              b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+              b.addEventListener("click", () => {
+                selTermino = t;
+                [...tm.children].forEach((c) => {
+                  c.className = "rounded-xl border px-3 py-3 text-sm font-semibold transition border-cream/15 text-cream-dim hover:border-gold/50";
+                  c.setAttribute("aria-pressed", "false");
+                });
+                b.className = "rounded-xl border px-3 py-3 text-sm font-semibold transition border-gold bg-gold/10 text-cream";
+                b.setAttribute("aria-pressed", "true");
+              });
+              tm.appendChild(b);
+            });
+          } else {
+            tw.classList.remove("hidden");
+            document.getElementById("sheet-termino").innerHTML = "";
+            document.getElementById("sheet-termino-note").textContent =
+              current.id.includes("smash") || current.num <= 4
+                ? "Sellado smash a fuego alto: cocción completa por técnica, con costra caramelizada."
+                : "Este platillo no requiere término de cocción.";
+          }
+
+          const ew = document.getElementById("sheet-extras");
+          ew.innerHTML = "";
+          EXTRAS.forEach((x) => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "flex items-center justify-between rounded-xl border border-cream/15 px-4 py-3 text-sm transition hover:border-gold/50";
+            b.setAttribute("aria-pressed", "false");
+            b.innerHTML =
+              "<span>" + x.name + "</span><span class='tnum font-bold text-gold'>+$" + x.price + "</span>";
+            b.addEventListener("click", () => {
+              if (selExtras.has(x.id)) {
+                selExtras.delete(x.id);
+                b.className = "flex items-center justify-between rounded-xl border border-cream/15 px-4 py-3 text-sm transition hover:border-gold/50";
+                b.setAttribute("aria-pressed", "false");
+              } else {
+                selExtras.add(x.id);
+                b.className = "flex items-center justify-between rounded-xl border border-gold bg-gold/10 px-4 py-3 text-sm transition";
+                b.setAttribute("aria-pressed", "true");
+              }
+              refreshSheetTotal();
+            });
+            ew.appendChild(b);
+          });
+
+          refreshSheetTotal();
+          openSheet();
+        })
+      );
+
+      document.getElementById("qty-minus").addEventListener("click", () => { if (qty > 1) { qty--; refreshSheetTotal(); } });
+      document.getElementById("qty-plus").addEventListener("click", () => { if (qty < 12) { qty++; refreshSheetTotal(); } });
+
+      document.getElementById("sheet-add").addEventListener("click", () => {
+        if (!current) return;
+        const extrasTotal = [...selExtras].reduce((a, id) => a + EXTRAS.find((x) => x.id === id).price, 0);
+        const priceLabel = current.prices.find((p) => p.v === selPrice)?.k ?? "";
+        cart.push({
+          name: current.name,
+          detail: [
+            priceLabel,
+            selTermino,
+            [...selExtras].map((id) => EXTRAS.find((x) => x.id === id).name).join(", "),
+          ].filter(Boolean).join(" · "),
+          qty,
+          unit: selPrice + extrasTotal,
+        });
+        closeSheet();
+        renderCart();
+        openCart();
+      });
+
+      function cartTotal() { return cart.reduce((a, l) => a + l.unit * l.qty, 0); }
+      function cartCount() { return cart.reduce((a, l) => a + l.qty, 0); }
+
+      function renderCart() {
+        const ul = document.getElementById("cart-lines");
+        ul.innerHTML = "";
+        if (!cart.length) {
+          ul.innerHTML = "<li class='rounded-xl border border-dashed border-cream/20 px-5 py-8 text-center text-sm text-smoke'>Tu pedido está vacío.<br />La brasa te espera en el menú.</li>";
+        }
+        cart.forEach((l, i) => {
+          const li = document.createElement("li");
+          li.className = "rounded-xl border border-cream/10 bg-coal px-4 py-3.5";
+          li.innerHTML =
+            "<div class='flex items-start justify-between gap-3'>" +
+              "<div><p class='font-bold'>" + l.name + " <span class='tnum text-gold'>×" + l.qty + "</span></p>" +
+              (l.detail ? "<p class='mt-1 text-xs text-smoke'>" + l.detail + "</p>" : "") + "</div>" +
+              "<p class='tnum font-body text-lg font-extrabold tracking-tight text-gold'>$" + l.unit * l.qty + "</p>" +
+            "</div>" +
+            "<button class='mt-2 text-[11px] uppercase tracking-[0.18em] text-smoke transition hover:text-gold' data-rm='" + i + "'>Quitar</button>";
+          ul.appendChild(li);
+        });
+        ul.querySelectorAll("[data-rm]").forEach((b) =>
+          b.addEventListener("click", () => { cart.splice(Number(b.dataset.rm), 1); renderCart(); })
+        );
+        document.getElementById("cart-total").textContent = money(cartTotal());
+        document.getElementById("cart-count").textContent = cartCount();
+        document.getElementById("cart-total-fab").textContent = money(cartTotal());
+        const fab = document.getElementById("cart-fab");
+        fab.classList.toggle("hidden", !cart.length);
+        fab.classList.toggle("flex", !!cart.length);
+        document.getElementById("cart-send").disabled = !cart.length;
+      }
+
+      document.getElementById("cart-clear").addEventListener("click", () => { cart.length = 0; renderCart(); });
+      document.getElementById("cart-send").addEventListener("click", () => {
+        if (!cart.length) return;
+        const lines = cart.map((l) => "• " + l.qty + "× " + l.name + (l.detail ? " (" + l.detail + ")" : "") + " — $" + l.unit * l.qty);
+        const msg = "Hola RUMEN, quiero pedir:\n" + lines.join("\n") + "\nTotal: $" + cartTotal() + "\nMi nombre: \nMi dirección: ";
+        window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg), "_blank");
+      });
+      renderCart();
+    </script>
+  </body>
+</html>

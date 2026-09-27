@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --color-coal: #0d0d0d;
+  --color-coal-2: #141414;
+  --color-coal-3: #1c1a17;
+  --color-gold: #c18c4e;
+  --color-gold-soft: #d9a961;
+  --color-gold-deep: #8f6530;
+  --color-cream: #f4ede1;
+  --color-cream-dim: #cbbfa9;
+  --color-smoke: #8e867a;
+
+  --font-display: "Bodoni Moda", "Didot", "Bodoni MT", Georgia, serif;
+  --font-body: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-coal);
+  color: var(--color-cream);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #c18c4e;
+  color: #0d0d0d;
+}
+
+:focus-visible {
+  outline: 2px solid #c18c4e;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Custom scrollbar carries the brand */
+::-webkit-scrollbar {
+  width: 11px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0d0d;
+}
+::-webkit-scrollbar-thumb {
+  background: #3a2f22;
+  border-radius: 8px;
+  border: 2px solid #0d0d0d;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c18c4e;
+}
+
+/* Film grain over moody photography */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Marquee */
+@keyframes rumen-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: rumen-marquee 28s linear infinite;
+}
+
+/* Reveal on scroll — visible by default, enhanced by JS */
+.reveal {
+  opacity: 1;
+}
+.js .reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.js .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Ember glow behind hero title */
+.ember {
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 38%, rgba(193, 140, 78, 0.22), transparent 70%),
+    radial-gradient(ellipse 90% 60% at 50% 110%, rgba(193, 140, 78, 0.1), transparent 70%);
+}
+
+/* Gold button sweep */
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-gold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 244, 224, 0.45) 50%, transparent 70%);
+  transform: translateX(-110%);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-gold:hover::before {
+  transform: translateX(110%);
+}
+
+/* Card photo treatment */
+.dish-photo {
+  filter: saturate(1.08) contrast(1.06);
+  transition:
+    transform 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.6s ease;
+}
+.group:hover .dish-photo {
+  transform: scale(1.06);
+  filter: saturate(1.16) contrast(1.08);
+}
+
+/* Bottom sheet + drawer motion */
+.sheet {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.backdrop {
+  transition: opacity 0.35s ease;
+}
+
+/* Numerals align in prices */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
